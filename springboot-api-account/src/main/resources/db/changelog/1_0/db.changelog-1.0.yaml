@@ -1,0 +1,46 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: "2.0"
+      author: Saravanan
+
+  - include:
+      file: currencies/001_create_currencies_table.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: accounts/001_create_accounts_table.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: accountcurrencies/001_create_account_currencies_table.sql
+      relativeToChangelogFile: true
+
+  - include:
+      file: accountmessagelog/001_create_accounts_audit_table.sql
+      relativeToChangelogFile: true
+
+  - changeSet:
+      id: 202210211250-1-data
+      author: Saravanan
+      changes:
+        - loadData:
+            catalogName: cat
+            columns:
+              - column:
+                  header: currency_id
+                  name: currency_id
+                  type: string
+              - column:
+                  header: currency_desc
+                  name: currency_desc
+                  type: string
+            commentLineStartsWith: //
+            encoding: UTF-8
+            file: currencies/currencies.csv
+            quotchar: '""'
+            relativeToChangelogFile: true
+            schemaName: public
+            separator: ','
+            tableName: CURRENCIES
+            usePreparedStatements: true

@@ -1,0 +1,38 @@
+version: "3.7"
+services:
+
+  rabbitmq:
+     image: rabbitmq:management
+     ports:
+       - "5672:5672" #JMS Port
+       - "15672:15672" #Management Port - default user:pass = guest:guest
+
+  postgres_db:
+    image: "postgres:11.4"
+    restart: always
+    ports:
+      - 5432:5432
+
+  springboot-api-account:
+    build: .
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres_db
+      - rabbitmq
+    links:
+      - postgres_db
+      - rabbitmq
+
+  springboot-api-transaction:
+    build: .
+    restart: always
+    ports:
+      - 8085:8085
+    depends_on:
+      - postgres_db
+      - rabbitmq
+    links:
+      - postgres_db
+      - rabbitmq

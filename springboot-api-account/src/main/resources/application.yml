@@ -1,0 +1,44 @@
+server:
+  port : 8080
+
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: admin
+    url: jdbc:postgresql://localhost/tummaccount
+  sql:
+    init:
+      continue-on-error: true
+      mode: always
+      platform: postgres
+
+  cloud:
+    stream:
+      function:
+        definition: accProcessor;accConsumer;updateAccProcessor;updateAccConsumer;transUpdateProcessor;transRollbackProcessor
+
+      bindings:
+        accProducer-out-0:
+          destination: account-create-request
+        accProcessor-in-0:
+          destination: account-create-request
+        accProcessor-out-0:
+          destination: account-create-response
+        accConsumer-in-0:
+          destination: account-create-response
+        updateAccProcessor-in-0:
+          destination: account-update-request
+        updateAccProcessor-out-0:
+          destination: account-update-response
+        updateAccConsumer-in-0:
+          destination: account-update-response
+        transUpdateProcessor-in-0:
+          destination: transaction-update-request
+        transRollbackProcessor-in-0:
+          destination: transaction-rollback-request
+      rabbitmq:
+        binder:
+          brokers: localhost:15672
+          auto-create-topics: true
